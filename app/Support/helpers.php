@@ -12,16 +12,32 @@ if (! function_exists('frontend_asset')) {
     function frontend_asset(string $path): string
     {
         $manifestFile = public_path('mix-manifest.json');
+        $versioned = null;
 
         if (file_exists($manifestFile)) {
             $manifest = json_decode((string) file_get_contents($manifestFile), true);
 
             if (is_array($manifest) && isset($manifest['/'.$path])) {
-                return url(ltrim((string) $manifest['/'.$path], '/'));
+                $versioned = ltrim((string) $manifest['/'.$path], '/');
             }
         }
 
-        return url($path);
+        $path = $versioned ?? $path;
+
+        // Joriy request bazasi — SCRIPT_NAME'dan olinadi, chunki APP_URL
+        // subpapka muhitlarida noto'g'ri bo'lishi mumkin.
+        // Muhim: sahifa index.php?_route=... orqali ochilganda SCRIPT_NAME
+        // '/resume/public/index.php' ko'rinishida keladi — fayl nomini
+        // olib tashlab, faqat papka qismini olamiz, aks holda URL
+        // 'index.php/css/app.css' kabi buziladi va CSS yuklanmaydi.
+        $request = request();
+        $script = str_replace('\\', '/', (string) $request->server('SCRIPT_NAME', ''));
+
+        $slashPos = strrpos($script, '/');
+        $base = $slashPos === false ? '' : substr($script, 0, $slashPos);
+        $base = rtrim($base, '/');
+
+        return $request->getSchemeAndHttpHost().$base.'/'.ltrim($path, '/');
     }
 }
 
