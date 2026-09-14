@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
@@ -9,6 +10,8 @@ use Tests\TestCase;
 
 class ResumePdfTest extends TestCase
 {
+    use RefreshDatabase;
+
     protected function tearDown(): void
     {
         // Test davomida saqlangan vaqtinchalik rasmlarni tozalash
@@ -258,6 +261,119 @@ class ResumePdfTest extends TestCase
         }
 
         $this->post(route('resume.pdf'), $this->validPayload())->assertStatus(429);
+    }
+
+    /* ---------------------------------------------------------------------
+     * Database: saqlash + ro'yxat + qayta yaratish + o'chirish
+     * --------------------------------------------------------------------- */
+    public function test_save_record_stores_resume_in_database(): void
+    {
+        $payload = $this->validPayload();
+        $payload['save_record'] = '1';
+
+        $response = $this->post(route('resume.pdf'), $payload);
+
+        $response->assertStatus(200);
+        $this->assertDatabaseCount('resumes', 1);
+
+        $resume = \App\Models\Resume::first();
+        $this->assertSame("Yarashev Sardor O'tabek o'g'li", $resume->full_name);
+        $this->assertSame('Samarqand viloyati', $resume->birth_place);
+        $this->assertCount(1, $resume->employment);
+        $this->assertCount(1, $resume->relatives);
+    }
+
+    public function test_sensitive_fields_are_encrypted_in_database(): void
+    {
+        $payload = $this->validPayload();
+        $payload['save_record'] = '1';
+
+        $this->post(route('resume.pdf'), $payload);
+
+        $raw = \Illuminate\Support\Facades\DB::table('resumes')->first();
+
+        // Bazada xom holda YO'Q, faqat shifrlangan bo'ladi
+        $this->assertStringNotContainsString('+998 90 123 45 67', $raw->phone);
+        $this->assertStringNotContainsString("Registon ko'chasi", $raw->home_address);
+        $this->assertStringNotContainsString('AA1234567', $raw->passport_info);
+
+        // Model orqali o'qilganda to'g'ri qaytadi
+        $resume = \App\Models\Resume::first();
+        $this->assertSame('+998 90 123 45 67', $resume->phone);
+    }
+
+    public function test_index_page_lists_saved_resumes(): void
+    {
+        \App\Models\Resume::create([
+            'full_name' => 'Testov Test Testovich',
+            'birth_place' => 'Toshkent',
+            'nationality' => "o'zbek",
+            'party_affiliation' => "yo'q",
+            'education' => 'oliy',
+            'institution' => 'TDYU',
+            'academic_degree' => "yo'q",
+            'academic_title' => "yo'q",
+            'employment' => [['period' => '2020', 'organization' => 'Test', 'position' => '']],
+            'relatives' => [['relationship' => 'Otasi', 'full_name' => 'X']],
+            'home_address' => 'Toshkent sh.',
+        ]);
+
+        $response = $this->get(route('resume.index'));
+
+        $response->assertStatus(200);
+        $response->assertSee('Testov Test Testovich');
+    }
+
+    public function test_regenerate_pdf_from_saved_record(): void
+    {
+        $resume = \App\Models\Resume::create([
+            'full_name' => "Yarashev Sardor O'tabek o'g'li",
+            'birth_place' => 'Samarqand',
+            'nationality' => "o'zbek",
+            'party_affiliation' => "yo'q",
+            'education' => 'oliy',
+            'institution' => 'SamDU',
+            'academic_degree' => 'bakalavr',
+            'academic_title' => "yo'q",
+            'employment' => [['period' => '2020', 'organization' => 'IT Park', 'position' => 'Dev']],
+            'relatives' => [['relationship' => 'Otasi', 'full_name' => 'X']],
+            'home_address' => 'Samarqand sh.',
+        ]);
+
+        $response = $this->get(route('resume.regenerate', $resume));
+
+        $response->assertStatus(200);
+        $this->assertSame('application/pdf', $response->headers->get('Content-Type'));
+        $this->assertStringStartsWith('%PDF', $response->getContent());
+    }
+
+    public function test_destroy_removes_resume_and_photo(): void
+    {
+        \Illuminate\Support\Facades\Storage::fake('local');
+
+        $resume = new \App\Models\Resume([
+            'full_name' => 'Ochiriladigan Test',
+            'birth_place' => 'Toshkent',
+            'nationality' => "o'zbek",
+            'party_affiliation' => "yo'q",
+            'education' => 'oliy',
+            'institution' => 'TDYU',
+            'academic_degree' => "yo'q",
+            'academic_title' => "yo'q",
+            'employment' => [['period' => '2020', 'organization' => 'T', 'position' => '']],
+            'relatives' => [['relationship' => 'Otasi', 'full_name' => 'X']],
+            'home_address' => 'Toshkent',
+            'photo_path' => 'resume-photos/photo-test.jpg',
+        ]);
+        $resume->save();
+
+        \Illuminate\Support\Facades\Storage::disk('local')->put('resume-photos/photo-test.jpg', 'fake');
+
+        $response = $this->delete(route('resume.destroy', $resume));
+
+        $response->assertRedirect(route('resume.index'));
+        $this->assertDatabaseMissing('resumes', ['id' => $resume->id]);
+        \Illuminate\Support\Facades\Storage::disk('local')->assertMissing('resume-photos/photo-test.jpg');
     }
 
     /* ---------------------------------------------------------------------

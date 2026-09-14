@@ -2,13 +2,16 @@
 
 Foydalanuvchi formada shaxsiy ma'lumotlarini, ta'limi, mehnat faoliyati va yaqin qarindoshlari haqidagi ma'lumotlarni kiritadi, 3x4 profil rasmini yuklaydi va **bitta tugma bosish orqali** rasmiy ko'rinishdagi ikki sahifali A4 PDF ma'lumotnomani yuklab oladi.
 
-**Maxfiylik:** hech qanday login/database yo'q. Telefon, manzil, pasport ma'lumotlari faqat bitta request davomida qayta ishlanadi, PDF qaytarilgach yo'q bo'lib ketadi. Vaqtinchalik rasm faqat `local` diskda (storage/app) saqlanadi va PDF generatsiyasidan so'ng darhol (`try/finally`) o'chiriladi — `public` disk hech qachon ishlatilmaydi.
+**Maxfiylik:** agar "Ma'lumotnomani bazaga saqlash" belgilanmasa — hech qanday login/database yozuvi yo'q: telefon, manzil, pasport ma'lumotlari faqat bitta request davomida qayta ishlanadi va PDF qaytarilgach yo'q bo'lib ketadi.
+
+**Bazaga saqlash (ixtiyoriy):** forma pastidagi "Ma'lumotnomani bazaga saqlash" katakchasi belgilansa, ma'lumotnoma `resumes` jadvaliga saqlanadi — **maxfiy maydonlar (telefon, manzil, pasport, qarindoshlar, mehnat faoliyati) Laravel encrypted cast bilan shifrlangan holda**. Rasm ham faqat private `local` diskda saqlanadi. `/resumes` sahifasidan ro'yxatni ko'rish, qayta PDF yaratish, o'chirish mumkin.
 
 ## Texnologiyalar
 
 - Laravel 9.x (composer.json'dagi mavjud loyiha asosida) — PHP **8.1** minimal, PHP 8.2 tavsiya etiladi
 - Blade, Vanilla JavaScript, oddiy CSS, **Laravel Mix** (Vite emas — Laravel 9 standarti)
 - `barryvdh/laravel-dompdf` (dompdf 3.x)
+- MySQL (saqlash funksiyasi uchun; standart: `DB_CONNECTION=mysql`) — testlar in-memory SQLite'da
 - PHPUnit
 
 ## Talablar
@@ -42,6 +45,7 @@ PDF'dagi rasm `data:` URI sifatda inline uzatiladi, shuning uchun remote yuklash
 
 ```bash
 php artisan serve          # yoki OSPanel/OpenServer'da virtual host
+php artisan migrate        # resumes jadvalini yaratish (saqlash uchun)
 npm run dev                # assetlarni build qilish (bir marta)
 # yoki
 npm run watch              # o'zgarishlarni kuzatish
@@ -49,6 +53,9 @@ npm run watch              # o'zgarishlarni kuzatish
 
 - Forma: `GET /` (route nomi `resume.form`)
 - PDF: `POST /resume/pdf` (route nomi `resume.pdf`, `throttle:10,1`)
+- Ro'yxat: `GET /resumes` · Ko'rish: `GET /resumes/{id}` · Qayta PDF: `GET /resumes/{id}/pdf` · O'chirish: `DELETE /resumes/{id}`
+
+> **Subpapka/nginx rewrite muammosi:** rewrite qilmaydigan serverlarda ichki havolalar `index.php?_route=/...` formatida ishlaydi (`public/index.php` shim + `resume_route()` helperi). Rewrite ishlaydigan serverda bu shaffof.
 
 ## Build
 

@@ -5,7 +5,10 @@
 @section('content')
     <header class="form-header">
         <h1 class="form-header__title">Ma'lumotnoma generatori</h1>
-        <p class="form-header__subtitle">Ma'lumotlaringizni kiriting va tayyor PDF hujjatni yuklab oling</p>
+        <p class="form-header__subtitle">
+            Ma'lumotlaringizni kiriting va tayyor PDF hujjatni yuklab oling
+            · <a href="{{ resume_route('resume.index') }}">Saqlanganlar</a>
+        </p>
     </header>
 
     @if($errors->any())
@@ -505,6 +508,16 @@
         </section>
 
         {{-- ===== Amallar ===== --}}
+        <div class="save-option card">
+            <label class="save-option__label">
+                <input type="checkbox" name="save_record" value="1">
+                Ma'lumotnomani bazaga saqlash (keyinroq ro'yxatdan qayta PDF yaratish mumkin)
+            </label>
+            <p class="field__hint">
+                Saqlanmasa — ma'lumotlar faqat PDF yaratish uchun ishlatiladi va serverda qolmaydi.
+            </p>
+        </div>
+
         <div class="form-actions">
             <button type="button" class="btn btn--secondary" id="js-preview-btn">Oldindan ko'rish</button>
             <button type="submit" class="btn btn--primary" id="js-submit-btn">PDF yuklab olish</button>

@@ -25,17 +25,18 @@ if (! function_exists('frontend_asset')) {
     }
 }
 
-if (! function_exists('resume_pdf_action')) {
+if (! function_exists('resume_action_url')) {
     /**
-     * PDF endpoint uchun forma action URL'i.
+     * Ichki URL'larni front controller (index.php) orqali qurish.
      *
-     * Har doim front controller (index.php) orqali yuboriladi va route
-     * ?_route= parametrida ko'rsatiladi. nginx rewrite bo'lmagan
-     * subpapka muhitlarida ham (OSPanel) ishlaydi, artisan serve'da ham,
-     * alohida domenda ham — chunki URL joriy request'ning SCRIPT_NAME'idan
-     * quriladi, config'dagi APP_URL'dan emas.
+     * nginx rewrite bo'lmagan subpapka muhitlarida (OSPanel) ham,
+     * artisan serve'da ham, alohida domenda ham ishlaydi — chunki URL
+     * joriy request'ning SCRIPT_NAME'idan quriladi, APP_URL'dan emas.
+     *
+     * @param  string  $path  Route path (masalan '/resume/pdf', '/resumes/5')
+     * @param  array<string, mixed>  $query  Qo'shimcha query parametrlar
      */
-    function resume_pdf_action(): string
+    function resume_action_url(string $path, array $query = []): string
     {
         $request = request();
         $script = str_replace('\\', '/', (string) $request->server('SCRIPT_NAME', ''));
@@ -49,8 +50,47 @@ if (! function_exists('resume_pdf_action')) {
             $script = rtrim($script, '/').'/index.php';
         }
 
-        return $request->getSchemeAndHttpHost().$script.'?'.http_build_query([
-            '_route' => '/resume/pdf',
-        ]);
+        if ($path !== '/' && $path !== '') {
+            $query['_route'] = $path;
+        }
+
+        return $request->getSchemeAndHttpHost().$script.($query ? '?'.http_build_query($query) : '');
+    }
+}
+
+if (! function_exists('resume_pdf_action')) {
+    /**
+     * PDF endpoint uchun forma action URL'i (resume_action_url qisqartmasi).
+     */
+    function resume_pdf_action(): string
+    {
+        return resume_action_url('/resume/pdf');
+    }
+}
+
+if (! function_exists('resume_route')) {
+    /**
+     * Loyiha ichki havolalari uchun umumiy URL (resume_action_url qisqartmasi).
+     */
+    function resume_route(string $route, $id = null): string
+    {
+        $paths = [
+            'resume.form' => '/',
+            'resume.index' => '/resumes',
+        ];
+
+        if (isset($paths[$route])) {
+            $path = $paths[$route];
+        } elseif ($route === 'resume.show') {
+            $path = '/resumes/'.$id;
+        } elseif ($route === 'resume.regenerate') {
+            $path = '/resumes/'.$id.'/pdf';
+        } elseif ($route === 'resume.destroy') {
+            $path = '/resumes/'.$id;
+        } else {
+            $path = '/';
+        }
+
+        return resume_action_url($path);
     }
 }

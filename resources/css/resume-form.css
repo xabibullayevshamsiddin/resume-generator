@@ -252,6 +252,85 @@ body {
     color: #991b1b;
 }
 
+.alert--success {
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    color: #166534;
+}
+
+/* Saqlash opsiyasi */
+.save-option {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.save-option__label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.save-option__label input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #2563eb;
+}
+
+/* Ro'yxat sahifasi */
+.rows-table--index td {
+    vertical-align: middle;
+}
+
+.cell-index-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.cell-index-actions .inline-form {
+    display: inline;
+}
+
+.empty-state {
+    color: #5a6472;
+    text-align: center;
+    padding: 24px 0;
+}
+
+.show-table .doc__label {
+    width: 160px;
+}
+
+/* Pagination */
+.pagination {
+    display: flex;
+    gap: 6px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+}
+
+.pagination .page-link {
+    padding: 6px 12px;
+    border: 1px solid #c4ccd6;
+    border-radius: 6px;
+    color: #1f2430;
+    text-decoration: none;
+}
+
+.pagination .page-link--active {
+    background: #2563eb;
+    color: #fff;
+    border-color: #2563eb;
+}
+
+.pagination .page-link--disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
 .alert ul {
     margin: 6px 0 0 18px;
 }

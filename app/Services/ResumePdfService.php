@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Http\Requests\GenerateResumeRequest;
+use App\Models\Resume;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\UploadedFile;
@@ -34,7 +35,7 @@ class ResumePdfService
     /**
      * Hujjat HTML'ini yig'adi, metadata qo'yadi va download response qaytaradi.
      *
-     * @return \Symfony\Component\HttpFoundation\StreamedResponse|\Barryvdh\DomPDF\PDF
+ * @return \Symfony\Component\HttpFoundation\StreamedResponse|\Barryvdh\DomPDF\PDF
      */
     public function generateDownload(GenerateResumeRequest $request, string $filename)
     {
@@ -43,18 +44,103 @@ class ResumePdfService
         try {
             $data = $this->buildViewData($request->validated(), $photoPath);
 
-            $pdf = Pdf::loadHtml(
-                view('resume.pdf', $data)->render()
-            );
-
-            $dompdf = $pdf->getDomPDF();
-            $dompdf->add_info('Title', $data['fullName'].' — Ma\'lumotnoma');
-            $dompdf->add_info('Author', 'Ma\'lumotnoma generatori');
-
-            return $pdf->download($filename);
+            return $this->renderPdf($data, $filename);
         } finally {
             // Xatolik yuz berganda ham vaqtinchalik rasm o'chiriladi.
             $this->deleteTemporaryPhoto($photoPath);
+        }
+    }
+
+    /**
+     * Bazadagi saqlangan ma'lumotnoma asosida PDF qayta yaratadi.
+     */
+    public function generateFromModel(Resume $resume, string $filename)
+    {
+        return $this->renderPdf(
+            $this->buildViewData($resume->toFormData(), $resume->photo_path),
+            $filename
+        );
+    }
+
+    /**
+     * Umumiy PDF render — HTML yig'adi, metadata qo'yadi, download qaytaradi.
+     */
+    public function renderPdf(array $data, string $filename)
+    {
+        $pdf = Pdf::loadHtml(
+            view('resume.pdf', $data)->render()
+        );
+
+        $dompdf = $pdf->getDomPDF();
+        $dompdf->add_info('Title', $data['fullName']." — Ma'lumotnoma");
+        $dompdf->add_info('Author', "Ma'lumotnoma generatori");
+
+        return $pdf->download($filename);
+    }
+
+    /**
+     * Bazaga yangi ma'lumotnoma saqlaydi (rasm bilan).
+     * Rasm doimiy ravishda faqat `local` (private) diskda turadi.
+     */
+    public function storeResume(array $validated, ?UploadedFile $photo): Resume
+    {
+        $photoPath = null;
+
+        if ($photo !== null) {
+            $mime = (string) $photo->getMimeType();
+            $extension = match ($mime) {
+                'image/png' => 'png',
+                'image/webp' => 'webp',
+                default => 'jpg',
+            };
+
+            $path = $photo->storeAs(
+                self::PHOTO_DIRECTORY,
+                'resume-'.Str::uuid()->toString().'.'.$extension,
+                self::PHOTO_DISK
+            );
+
+            $photoPath = is_string($path) ? $path : null;
+        }
+
+        return Resume::create([
+            'full_name' => $validated['full_name'],
+            'current_status' => $validated['current_status'] ?? null,
+            'current_organization' => $validated['current_organization'] ?? null,
+            'current_position' => $validated['current_position'] ?? null,
+            'birth_date' => $validated['birth_date'] ?? null,
+            'birth_place' => $validated['birth_place'],
+            'nationality' => $validated['nationality'],
+            'party_affiliation' => $validated['party_affiliation'],
+            'party_affiliation_other' => $validated['party_affiliation_other'] ?? null,
+            'military_rank' => $validated['military_rank'] ?? null,
+            'education' => $validated['education'],
+            'institution' => $validated['institution'],
+            'institution_year' => $validated['institution_year'] ?? null,
+            'specialty' => $validated['specialty'] ?? null,
+            'academic_degree' => $validated['academic_degree'],
+            'academic_degree_other' => $validated['academic_degree_other'] ?? null,
+            'academic_title' => $validated['academic_title'],
+            'academic_title_other' => $validated['academic_title_other'] ?? null,
+            'languages' => $validated['languages'] ?? null,
+            'awards' => $validated['awards'] ?? null,
+            'elected_bodies' => $validated['elected_bodies'] ?? null,
+            'employment' => $validated['employment'],
+            'relatives' => $validated['relatives'],
+            'phone' => $validated['phone'] ?? null,
+            'home_address' => $validated['home_address'],
+            'passport_info' => $validated['passport_info'] ?? null,
+            'photo_path' => $photoPath,
+        ]);
+    }
+
+    /**
+     * Saqlangan ma'lumotnoma rasmini o'chiradi.
+     */
+    public function deleteResumePhoto(Resume $resume): void
+    {
+        if (filled($resume->photo_path)) {
+            Storage::disk(self::PHOTO_DISK)->delete($resume->photo_path);
         }
     }
 
