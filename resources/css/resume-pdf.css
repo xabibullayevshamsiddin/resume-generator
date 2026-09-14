@@ -1,0 +1,219 @@
+/* ==========================================================================
+   Hujjat uchun umumiy structura (web preview va DomPDF uchun umumiy qism)
+   ========================================================================== */
+
+.doc {
+    color: #111111;
+    font-family: "DejaVu Sans", Arial, sans-serif;
+    font-size: 12px;
+    line-height: 1.35;
+}
+
+.doc__page {
+    box-sizing: border-box;
+}
+
+/* ===== 1-sahifa: ism + rasm ===== */
+.doc__header-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.doc__header-name {
+    padding: 0 10px 0 0;
+    vertical-align: middle;
+    text-align: center;
+}
+
+.doc__fullname {
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.doc__status {
+    margin-top: 4px;
+    font-size: 12px;
+}
+
+.doc__header-photo {
+    width: 40mm;
+    vertical-align: top;
+    text-align: right;
+}
+
+.doc__photo {
+    width: 38mm;
+    height: 48mm;
+}
+
+.doc__photo--empty {
+    border: 1px dashed #999999;
+    background-color: #f3f4f6;
+    box-sizing: border-box;
+}
+
+/* ===== Section sarlavhalar ===== */
+.doc__section-title {
+    margin: 14px 0 6px 0;
+    font-weight: bold;
+    font-size: 13px;
+    text-transform: uppercase;
+    border-bottom: 2px solid #111;
+    padding-bottom: 2px;
+}
+
+.doc__page2-title {
+    margin: 0 0 10px 0;
+    font-weight: bold;
+    font-size: 15px;
+    text-align: center;
+}
+
+/* ===== Shaxsiy ma'lumotlar jadvali (2 ustunli blok) ===== */
+.doc__personal-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.doc__personal-table .doc__label {
+    width: 14%;
+    font-weight: bold;
+    padding: 2px 6px 2px 0;
+    vertical-align: top;
+}
+
+.doc__personal-table .doc__value {
+    width: 36%;
+    padding: 2px 12px 2px 0;
+    vertical-align: top;
+}
+
+.doc__label,
+.doc__value {
+    word-wrap: break-word;
+}
+
+/* ===== Mehnat faoliyati jadvali ===== */
+.doc__employment-table,
+.doc__relatives-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 4px;
+}
+
+.doc__th {
+    border: 1px solid #111;
+    background-color: #eeeeee;
+    font-weight: bold;
+    padding: 4px 6px;
+    text-align: center;
+}
+
+.doc__td {
+    border: 1px solid #111;
+    padding: 4px 6px;
+    vertical-align: top;
+    word-wrap: break-word;
+}
+
+.doc__td .doc__sub {
+    display: block;
+    font-size: 11px;
+    color: #333333;
+}
+
+/* ===== 2-sahifa: qarindoshlar jadvali ustunlari ===== */
+.doc__relatives-table .doc__sub {
+    display: block;
+    font-size: 10px;
+    color: #333333;
+}
+
+/* ===== Yakuniy ma'lumotlar ===== */
+.doc__final-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 14px;
+}
+
+.doc__final-table .doc__label {
+    width: 180px;
+    font-weight: bold;
+    padding: 2px 6px 2px 0;
+    vertical-align: top;
+}
+
+.doc__final-table .doc__value {
+    padding: 2px 0;
+    vertical-align: top;
+}
+
+.doc__nowrap {
+    white-space: nowrap;
+}
+
+/* ===== DomPDF rejimi ===== */
+.doc--pdf {
+    /* DomPDF uchun maxsus sozlamalar kerak bo'lsa */
+}
+
+@page {
+    size: A4 portrait;
+    margin: 12mm 15mm;
+}
+
+.doc--pdf {
+    font-family: "DejaVu Sans", sans-serif;
+    font-size: 12pt;
+}
+
+.doc--pdf .doc__photo {
+    width: 38mm;
+    height: 48mm;
+}
+
+.doc--pdf .doc__page--2 {
+    page-break-before: always;
+}
+
+.doc--pdf .doc__relatives-table tr,
+.doc--pdf .doc__employment-table tr {
+    page-break-inside: avoid;
+}
+
+/* Web preview (brauzer) uchun — @page umuman ishlatilmaydi */
+.doc--preview .doc__page--1 {
+    width: 210mm;
+    min-height: 297mm;
+    padding: 12mm 15mm;
+    background: #ffffff;
+    box-shadow: 0 2px 14px rgba(0, 0, 0, 0.18);
+    margin: 0 auto;
+    font-family: Arial, sans-serif;
+}
+
+.doc--preview .doc__page--2 {
+    width: 210mm;
+    min-height: 297mm;
+    padding: 12mm 15mm;
+    background: #ffffff;
+    box-shadow: 0 2px 14px rgba(0, 0, 0, 0.18);
+    margin: 16px auto 0 auto;
+    font-family: Arial, sans-serif;
+}
+
+.doc--preview .doc__page--2 {
+    page-break-before: auto;
+}
+
+/* Preview uzluksiz rejim: ikkala qism bitta uzun oq sahifada ko'rinadi */
+.doc--preview.doc--continuous .doc__page--1,
+.doc--preview.doc--continuous .doc__page--2 {
+    min-height: auto;
+    margin: 0 auto;
+    padding: 12mm 15mm;
+}
+
+.doc--preview.doc--continuous .doc__page--2 {
+    margin-top: -1px; /* o'rtada chiziq/suya paydo bo'lmasligi uchun */
+}
