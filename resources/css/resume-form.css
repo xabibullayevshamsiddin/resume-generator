@@ -304,54 +304,245 @@ body {
     /* pages are appended here by JS */
 }
 
-/* ===== Mobile ===== */
+/* ===== Mobil telefonlar ===== */
 @media (max-width: 720px) {
+    body {
+        font-size: 15px;
+    }
+
+    .page-container {
+        padding: 16px 12px 40px;
+    }
+
+    .form-header__title {
+        font-size: 22px;
+    }
+
+    .form-header__subtitle {
+        font-size: 14px;
+    }
+
+    .card {
+        padding: 14px 12px;
+        margin-bottom: 14px;
+        border-radius: 10px;
+    }
+
+    .card__title {
+        font-size: 16px;
+    }
+
     .grid {
         grid-template-columns: 1fr;
+        gap: 12px;
     }
 
     .field--span-2 {
         grid-column: auto;
     }
 
+    .input {
+        font-size: 16px; /* iOS zoom oldini olish */
+        padding: 10px 12px;
+    }
+
+    select.input {
+        height: 44px;
+    }
+
+    input[type="file"].input--file {
+        font-size: 14px;
+    }
+
+    .photo-preview img {
+        width: 84px;
+        height: 112px;
+    }
+
+    .field__error,
+    .field__hint {
+        font-size: 12px;
+    }
+
+    /* Tugmalar: to'liq kenglik, qulay bosish uchun */
+    .form-actions {
+        flex-direction: column;
+        gap: 10px;
+    }
+
     .form-actions .btn {
         width: 100%;
+        padding: 13px 16px;
+        font-size: 16px;
+    }
+
+    .rows-actions {
+        flex-direction: column;
+        gap: 8px;
     }
 
     .rows-actions .btn {
         width: 100%;
+        padding: 12px 16px;
     }
 
-    /* Relatives table -> cards */
-    .rows-table--relatives thead {
+    /* Umumiy mobil qator uslubi (employment + relatives) */
+    .rows-table thead {
         display: none;
     }
 
-    .rows-table--relatives,
-    .rows-table--relatives tbody {
+    .rows-table,
+    .rows-table tbody {
         display: block;
     }
 
-    .rows-table--relatives tr {
+    .rows-table tr {
         display: block;
         background: #f8fafc;
         border: 1px solid #e3e6eb;
-        border-radius: 8px;
+        border-radius: 10px;
         margin-bottom: 12px;
-        padding: 10px;
+        padding: 10px 12px;
     }
 
-    .rows-table--relatives td {
+    .rows-table td {
         display: block;
-        padding: 4px 0;
+        padding: 5px 0;
+        border: 0;
     }
 
-    .rows-table--relatives td::before {
+    .rows-table td::before {
         content: attr(data-label);
         display: block;
         font-size: 12px;
         font-weight: 600;
         color: #5a6472;
-        margin-bottom: 2px;
+        margin-bottom: 3px;
+    }
+
+    .rows-table td.cell-actions {
+        margin-top: 6px;
+        text-align: right;
+        border-top: 1px dashed #e3e6eb;
+        padding-top: 8px;
+    }
+
+    .rows-table td.cell-actions::before {
+        display: none;
+    }
+
+    .rows-table .input {
+        min-width: 0;
+        width: 100%;
+    }
+
+    /* O'chirish tugmasi kattaroq (oyoq barmog'i uchun) */
+    .btn--remove-row {
+        padding: 8px 18px;
+        font-size: 15px;
+    }
+
+    /* Preview overlay mobilda */
+    .preview-root {
+        padding: 12px 8px 24px;
+    }
+
+    .preview-root__bar {
+        margin-bottom: 8px;
+    }
+
+    .preview-root__title {
+        font-size: 15px;
+    }
+
+    /* A4 hujjat mobilda ekran kengligiga sig'adi */
+    .preview-root .doc--preview .doc__page--1,
+    .preview-root .doc--preview .doc__page--2 {
+        width: 100%;
+        min-height: auto;
+        padding: 16px;
+        box-shadow: none;
+        border: 1px solid #d7dbe2;
+        border-radius: 4px;
+    }
+
+    .preview-root .doc--preview.doc--continuous .doc__page--2 {
+        margin-top: 8px;
+    }
+
+    .preview-root .doc__fullname {
+        font-size: 17px;
+    }
+
+    .preview-root .doc__section-title {
+        font-size: 12px;
+    }
+
+    .preview-root .doc__page2-title {
+        font-size: 13px;
+    }
+
+    .preview-root .doc__photo {
+        width: 24mm;
+        height: 30mm;
+    }
+
+    .preview-root .doc__personal-table .doc__label,
+    .preview-root .doc__personal-table .doc__value {
+        font-size: 10px;
+        padding: 2px 4px 2px 0;
+    }
+
+    /* 4 ustunli jadval mobilda juftliklab ikki qatorga yig'iladi */
+    .preview-root .doc__personal-table tr {
+        display: block;
+    }
+
+    .preview-root .doc__personal-table td {
+        display: inline-block;
+        width: auto;
+    }
+
+    .preview-root .doc__personal-table .doc__label {
+        width: 36%;
+    }
+
+    .preview-root .doc__personal-table .doc__value {
+        width: 62%;
+    }
+
+    .preview-root .doc__td,
+    .preview-root .doc__th {
+        font-size: 10px;
+        padding: 3px 4px;
+    }
+
+    .preview-root .doc__td .doc__sub {
+        font-size: 9px;
+    }
+
+    .preview-root .doc__final-table .doc__label {
+        width: 110px;
+        font-size: 10px;
+    }
+
+    .preview-root .doc__final-table .doc__value {
+        font-size: 10px;
+    }
+}
+
+/* ===== Kichik telefonlar (<=380px) ===== */
+@media (max-width: 380px) {
+    .preview-root .doc__photo {
+        width: 20mm;
+        height: 25mm;
+    }
+
+    .preview-root .doc__fullname {
+        font-size: 15px;
+    }
+
+    .form-header__title {
+        font-size: 20px;
     }
 }

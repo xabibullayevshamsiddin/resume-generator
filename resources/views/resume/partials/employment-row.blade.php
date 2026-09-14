@@ -1,6 +1,6 @@
 @php($rowIndex = $rowIndex ?? 0)
 <tr class="employment-row" data-row="{{ $rowIndex }}">
-    <td class="cell-period">
+    <td class="cell-period" data-label="Davri">
         <label class="field__label--sr-only" for="employment-{{ $rowIndex }}-period">Davri</label>
         <input
             type="text"
@@ -11,7 +11,7 @@
             class="input"
         >
     </td>
-    <td class="cell-organization">
+    <td class="cell-organization" data-label="Tashkilot nomi">
         <label class="field__label--sr-only" for="employment-{{ $rowIndex }}-organization">Tashkilot nomi</label>
         <input
             type="text"
@@ -22,7 +22,7 @@
             class="input"
         >
     </td>
-    <td class="cell-position">
+    <td class="cell-position" data-label="Lavozim / yo'nalish">
         <label class="field__label--sr-only" for="employment-{{ $rowIndex }}-position">Lavozim</label>
         <input
             type="text"
