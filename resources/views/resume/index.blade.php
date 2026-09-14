@@ -32,14 +32,16 @@
                             <td data-label="Tashkilot">{{ $resume->current_organization ?: '—' }}</td>
                             <td data-label="Sana">{{ $resume->created_at->format('d.m.Y H:i') }}</td>
                             <td class="cell-index-actions" data-label="Amallar">
-                                <a class="btn btn--secondary" href="{{ resume_route('resume.show', $resume->getKey()) }}">Ko'rish</a>
-                                <a class="btn btn--primary" href="{{ resume_route('resume.regenerate', $resume->getKey()) }}">PDF</a>
-                                <form action="{{ resume_route('resume.destroy', $resume->getKey()) }}" method="POST" class="inline-form"
-                                      onsubmit="return confirm('O'chirilsinmi?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn--danger-outline">O'chirish</button>
-                                </form>
+                                <div class="index-actions">
+                                    <a class="btn btn--secondary" href="{{ resume_route('resume.show', $resume->getKey()) }}">Ko'rish</a>
+                                    <a class="btn btn--primary" href="{{ resume_route('resume.regenerate', $resume->getKey()) }}">PDF</a>
+                                    <form action="{{ resume_route('resume.destroy', $resume->getKey()) }}" method="POST" class="inline-form"
+                                          onsubmit="return confirm('O'chirilsinmi?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn--danger-outline">O'chirish</button>
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                     @endforeach

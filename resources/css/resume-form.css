@@ -284,14 +284,26 @@ body {
     vertical-align: middle;
 }
 
-.cell-index-actions {
+.rows-table--index th:last-child,
+.rows-table--index td:last-child {
+    width: 260px;
+}
+
+.index-actions {
     display: flex;
     gap: 8px;
     flex-wrap: wrap;
+    align-items: center;
 }
 
-.cell-index-actions .inline-form {
+.index-actions .btn {
+    padding: 6px 12px;
+    font-size: 14px;
+}
+
+.index-actions .inline-form {
     display: inline;
+    margin: 0;
 }
 
 .empty-state {
