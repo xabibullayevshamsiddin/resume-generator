@@ -507,16 +507,8 @@
             </div>
         </section>
 
-        {{-- ===== Amallar ===== --}}
-        <div class="save-option card">
-            <label class="save-option__label">
-                <input type="checkbox" name="save_record" value="1">
-                Ma'lumotnomani bazaga saqlash (keyinroq ro'yxatdan qayta yuklab olish mumkin)
-            </label>
-            <p class="field__hint">
-                Saqlanmasa — ma'lumotlar faqat hujjat yaratish uchun ishlatiladi va serverda qolmaydi.
-            </p>
-        </div>
+        {{-- Har bir yuborilish bazaga saqlanadi (save_record doim 1) --}}
+        <input type="hidden" name="save_record" value="1">
 
         <div class="form-actions">
             <button type="button" class="btn btn--secondary" id="js-preview-btn">Oldindan ko'rish</button>
@@ -526,7 +518,7 @@
         </div>
 
         <p class="privacy-note">
-            Ma'lumotlaringiz faqat hujjatni tayyorlash uchun ishlatiladi va serverda saqlanmaydi.
+            Ma'lumotnoma bazaga saqlanadi — ro'yxatdan qayta yuklab olish yoki o'chirish mumkin.
         </p>
     </form>
 
