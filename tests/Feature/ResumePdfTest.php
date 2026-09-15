@@ -33,7 +33,7 @@ class ResumePdfTest extends TestCase
      * --------------------------------------------------------------------- */
     public function test_form_page_opens_with_required_fields(): void
     {
-        $response = $this->get('/');
+        $response = $this->get(route('resume.form'));
 
         $response->assertStatus(200);
         $response->assertSee("Ma'lumotnoma generatori", false);
@@ -59,6 +59,10 @@ class ResumePdfTest extends TestCase
         // Laravel testing muhitida skeleton token tekshiruvini o'tkazib yuboradi,
         // shuning uchun: formada token borligi va route web (CSRF) guruhida ekanligi tekshiriladi.
         $response = $this->get(route('resume.form'));
+        $response->assertStatus(200);
+
+        // Landing sahifa '/' da ochiladi (apostrof escape bo'lib chiqadi)
+        $this->get('/')->assertSee('Ma&#039;lumotnoma generatori', false);
 
         $response->assertSee('name="csrf-token"', false);
         $response->assertSee('name="_token"', false);

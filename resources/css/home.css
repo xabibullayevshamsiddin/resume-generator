@@ -1,0 +1,214 @@
+/* ==========================================================================
+   Home (landing) sahifasi — forma CSS'idan butunlay alohida.
+   Mavzu: rasmiy hujjat / muhr estetikasi.
+   Ranglar: Ink #132743 · Parchment #EDE6D6 · Brass #C9A227 · Slate #8093AC
+   ========================================================================== */
+
+:root {
+    --ink: #132743;
+    --parchment: #EDE6D6;
+    --brass: #C9A227;
+    --slate: #8093AC;
+    --font-serif: "Lora", Georgia, "Times New Roman", serif;
+}
+
+.body--home {
+    margin: 0;
+    background: var(--ink);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+/* Hero ------------------------------------------------------------------- */
+
+.hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 20px;
+    background: var(--ink);
+    color: var(--parchment);
+    text-align: center;
+    overflow: hidden;
+}
+
+/* Muhr shakli — sof CSS + inline SVG, tashqi rasm yo'q */
+.hero__seal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: min(70vmin, 560px);
+    height: min(70vmin, 560px);
+    transform: translate(-50%, -52%);
+    pointer-events: none;
+}
+
+.hero__seal svg {
+    width: 100%;
+    height: 100%;
+    fill: none;
+    stroke: var(--brass);
+    stroke-width: 1.5;
+    stroke-dasharray: 6 5;
+    opacity: 0.12;
+}
+
+.hero__seal svg circle:first-child {
+    stroke-dasharray: none;
+}
+
+.hero__title {
+    position: relative;
+    margin: 0 0 14px;
+    max-width: 14ch;
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: clamp(34px, 6vw, 58px);
+    line-height: 1.15;
+    letter-spacing: 0.01em;
+    color: var(--parchment);
+}
+
+/* Bitta so'z urg'u — rang bilan, ALL CAPS emas */
+.hero__title em {
+    font-style: italic;
+    color: var(--brass);
+}
+
+.hero__subtitle {
+    position: relative;
+    margin: 0 0 40px;
+    max-width: 34ch;
+    font-size: clamp(15px, 2vw, 18px);
+    line-height: 1.55;
+    color: var(--slate);
+}
+
+/* Tugmalar ---------------------------------------------------------------- */
+
+.hero__actions {
+    position: relative;
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.hero__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 28px;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 600;
+    font-family: inherit;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+/* Brass — yagona urg'u, faqat asosiy CTA */
+.hero__btn--primary {
+    border: 1px solid var(--brass);
+    background: var(--brass);
+    color: var(--ink);
+}
+
+.hero__btn--primary:hover {
+    background: #b8921f;
+    border-color: #b8921f;
+}
+
+/* Kontur, parchment chiziq, shaffof ichki qism */
+.hero__btn--secondary {
+    border: 1px solid var(--parchment);
+    background: transparent;
+    color: var(--parchment);
+}
+
+.hero__btn--secondary:hover:not(:disabled) {
+    background: rgba(237, 230, 214, 0.08);
+}
+
+.hero__btn--secondary:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.hero__btn:focus-visible {
+    outline: 3px solid var(--parchment);
+    outline-offset: 3px;
+}
+
+.hero__btn--primary:focus-visible {
+    outline-color: var(--brass);
+}
+
+/* Video modal -------------------------------------------------------------- */
+
+.video-modal {
+    width: min(880px, 90vw);
+    padding: 0;
+    border: 1px solid rgba(237, 230, 214, 0.25);
+    border-radius: 8px;
+    background: var(--ink);
+    color: var(--parchment);
+}
+
+.video-modal::backdrop {
+    background: rgba(10, 20, 35, 0.75);
+}
+
+.video-modal__player {
+    display: block;
+    width: 100%;
+    max-height: 80vh;
+    background: #000;
+}
+
+.video-modal__close {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 36px;
+    height: 36px;
+    border: 1px solid rgba(237, 230, 214, 0.4);
+    border-radius: 50%;
+    background: rgba(19, 39, 67, 0.7);
+    color: var(--parchment);
+    font-size: 15px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.video-modal__close:hover {
+    background: rgba(237, 230, 214, 0.12);
+}
+
+.video-modal__close:focus-visible {
+    outline: 3px solid var(--brass);
+    outline-offset: 2px;
+}
+
+/* Mobil -------------------------------------------------------------------- */
+
+@media (max-width: 560px) {
+    .hero__actions {
+        flex-direction: column;
+        width: 100%;
+        max-width: 340px;
+    }
+
+    .hero__btn {
+        width: 100%;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hero__btn {
+        transition: none;
+    }
+}

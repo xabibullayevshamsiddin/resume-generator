@@ -66,6 +66,11 @@ if (! function_exists('resume_action_url')) {
             $script = rtrim($script, '/').'/index.php';
         }
 
+        // Yuklab olish uchun mazmun-negotsiatsiya so'rovlari (Accept: text/html)
+        // index.php'ga yo'naltirilgan bo'lsa ham ishlashi uchun har doim
+        // front controller shim ishlatiladi — nginx rewrite mavjud-yo'qligiga
+        // bog'lanmaydi.
+
         if ($path !== '/' && $path !== '') {
             $query['_route'] = $path;
         }
@@ -91,7 +96,7 @@ if (! function_exists('resume_route')) {
     function resume_route(string $route, $id = null): string
     {
         $paths = [
-            'resume.form' => '/',
+            'resume.form' => '/yarat',
             'resume.index' => '/resumes',
         ];
 

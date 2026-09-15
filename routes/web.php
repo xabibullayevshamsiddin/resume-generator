@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ResumeController;
 use Illuminate\Support\Facades\Route;
 
@@ -14,7 +15,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [ResumeController::class, 'showForm'])->name('resume.form');
+// Landing sahifa
+Route::get('/', [HomeController::class, 'index'])->name('home');
+
+Route::get('/yarat', [ResumeController::class, 'showForm'])->name('resume.form');
 
 Route::post('/resume/pdf', [ResumeController::class, 'downloadPdf'])
     ->middleware('throttle:10,1')

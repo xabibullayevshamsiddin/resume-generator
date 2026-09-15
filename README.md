@@ -51,9 +51,12 @@ npm run dev                # assetlarni build qilish (bir marta)
 npm run watch              # o'zgarishlarni kuzatish
 ```
 
-- Forma: `GET /` (route nomi `resume.form`)
+- Home (landing): `GET /` (route nomi `home`) — hero + video qo'llanma modali
+- Forma: `GET /yarat` (route nomi `resume.form`)
 - PDF: `POST /resume/pdf` (route nomi `resume.pdf`, `throttle:10,1`)
 - Ro'yxat: `GET /resumes` · Ko'rish: `GET /resumes/{id}` · Qayta PDF: `GET /resumes/{id}/pdf` · O'chirish: `DELETE /resumes/{id}`
+
+> **Video qo'llanma:** `public/videos/qollanma.mp4` faylini joylashtirsangiz, home sahifadagi "Video qo'llanmani ko'rish" tugmasi avtomatik faollashadi (fayl bo'lmasa tugma disabled holatda turadi, xato bermaydi).
 
 > **Subpapka/nginx rewrite muammosi:** rewrite qilmaydigan serverlarda ichki havolalar `index.php?_route=/...` formatida ishlaydi (`public/index.php` shim + `resume_route()` helperi). Rewrite ishlaydigan serverda bu shaffof.
 
@@ -100,10 +103,11 @@ app/
 ├── Services/ResumePdfService.php             # PDF mantıq'i, helperlar
 └── Support/helpers.php                       # frontend_asset() helperi
 resources/
-├── css/{app,resume-form,resume-pdf}.css
-├── js/{app,resume-form}.js                   # dinamik qatorlar, preview, submit guard
+├── css/{app,home,resume-form,resume-pdf}.css
+├── js/{app,home,resume-form}.js              # home: video modal; resume-form: dinamik qatorlar, preview, submit guard
 └── views/
-    ├── layouts/app.blade.php
+    ├── layouts/{app,home}.blade.php
+    ├── home.blade.php                        # landing sahifa (hero + video modal)
     └── resume/
         ├── form.blade.php
         ├── pdf.blade.php                     # DomPDF wrapper (CSS inline)
