@@ -18,11 +18,15 @@
     font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
 }
 
+.body--home,
+.body--home * {
+    box-sizing: border-box;
+}
+
 /* Hero ------------------------------------------------------------------- */
 
 .hero {
     position: relative;
-    min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -32,6 +36,12 @@
     color: var(--parchment);
     text-align: center;
     overflow: hidden;
+
+    /* To'liq ekran: svh — mobil brauzer panellari (address bar) hisobga
+       olingan kichik viewport — sahifa qisilmaydi va scroll paydo bo'lmaydi.
+       Eski brauzerlar uchun 100vh fallback qoladi. */
+    min-height: 100vh;
+    min-height: 100svh;
 }
 
 /* Muhr shakli — sof CSS + inline SVG, tashqi rasm yo'q.
@@ -218,14 +228,39 @@
 /* Mobil -------------------------------------------------------------------- */
 
 @media (max-width: 560px) {
+    .hero {
+        padding: 32px 20px;
+    }
+
+    .hero__title {
+        font-size: clamp(30px, 9.5vw, 38px);
+        margin-bottom: 10px;
+    }
+
+    .hero__subtitle {
+        margin-bottom: 32px;
+        font-size: 15px;
+    }
+
+    .hero__seal {
+        width: min(86vmin, 400px);
+        height: min(86vmin, 400px);
+    }
+
     .hero__actions {
         flex-direction: column;
         width: 100%;
         max-width: 340px;
+        gap: 12px;
     }
 
     .hero__btn {
         width: 100%;
+        padding: 15px 20px;
+    }
+
+    .video-modal {
+        width: 94vw;
     }
 }
 
