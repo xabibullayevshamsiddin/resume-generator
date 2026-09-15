@@ -34,7 +34,10 @@
     overflow: hidden;
 }
 
-/* Muhr shakli — sof CSS + inline SVG, tashqi rasm yo'q */
+/* Muhr shakli — sof CSS + inline SVG, tashqi rasm yo'q.
+   Juda sekin (120s) bir tekis aylanadi — soat mexanizmi hissi.
+   Markazlashtirish translate orqali bo'lgani uchun keyframes'da ham
+   shu translate saqlanadi, aks holda muhr joyidan siljiydi. */
 .hero__seal {
     position: absolute;
     top: 50%;
@@ -43,6 +46,25 @@
     height: min(70vmin, 560px);
     transform: translate(-50%, -52%);
     pointer-events: none;
+    animation: seal-rotate 120s linear infinite;
+    will-change: transform;
+}
+
+@keyframes seal-rotate {
+    from {
+        transform: translate(-50%, -52%) rotate(0deg);
+    }
+
+    to {
+        transform: translate(-50%, -52%) rotate(360deg);
+    }
+}
+
+/* Tizim darajasida "harakatni kamaytirish" yoqilgan bo'lsa — animatsiya yo'q */
+@media (prefers-reduced-motion: reduce) {
+    .hero__seal {
+        animation: none;
+    }
 }
 
 .hero__seal svg {
