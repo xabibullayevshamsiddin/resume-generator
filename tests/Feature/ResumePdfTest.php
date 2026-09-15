@@ -207,6 +207,64 @@ class ResumePdfTest extends TestCase
     }
 
     /* ---------------------------------------------------------------------
+     * 6b) DOCX format — format=docx bilan Word hujjat qaytaradi
+     * --------------------------------------------------------------------- */
+    public function test_docx_endpoint_returns_word_document(): void
+    {
+        $payload = $this->validPayload();
+        $payload['format'] = 'docx';
+
+        $response = $this->post(route('resume.pdf'), $payload);
+
+        $response->assertStatus(200);
+        $this->assertSame(
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            $response->headers->get('Content-Type')
+        );
+
+        // streamDownload closure ichida yozadi — imzo uchun output buffer
+        ob_start();
+        $response->sendContent();
+        $content = ob_get_clean();
+
+        // DOCX = ZIP arxiv, "PK" imzosi bilan boshlanadi
+        $this->assertStringStartsWith('PK', $content);
+    }
+
+    public function test_docx_temporary_photo_is_deleted(): void
+    {
+        $payload = $this->validPayload();
+        $payload['format'] = 'docx';
+
+        $this->post(route('resume.pdf'), $payload)->assertStatus(200);
+
+        $this->assertCount(0, Storage::disk('local')->allFiles('resume-photos'));
+    }
+
+    public function test_saved_record_docx_download(): void
+    {
+        $payload = $this->validPayload();
+        $payload['save_record'] = '1';
+
+        $this->post(route('resume.pdf'), $payload);
+
+        $resume = \App\Models\Resume::first();
+
+        $response = $this->get(route('resume.regenerate', [$resume, 'format' => 'docx']));
+
+        $response->assertStatus(200);
+        $this->assertSame(
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            $response->headers->get('Content-Type')
+        );
+
+        ob_start();
+        $response->sendContent();
+        $content = ob_get_clean();
+        $this->assertStringStartsWith('PK', $content);
+    }
+
+    /* ---------------------------------------------------------------------
      * 8) Vaqtinchalik rasm PDF'dan keyin (xatolikda ham) o'chiriladi
      * --------------------------------------------------------------------- */
     public function test_temporary_photo_is_deleted_after_pdf_generation(): void

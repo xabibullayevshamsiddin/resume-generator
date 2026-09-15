@@ -509,18 +509,29 @@
 
         {{-- ===== Amallar ===== --}}
         <div class="save-option card">
+            <div class="save-option__format">
+                <span class="save-option__caption">Hujjat formati</span>
+                <label class="save-option__radio">
+                    <input type="radio" name="format" value="pdf" checked>
+                    PDF yuklab olish
+                </label>
+                <label class="save-option__radio">
+                    <input type="radio" name="format" value="docx">
+                    Word (.docx) yuklab olish
+                </label>
+            </div>
             <label class="save-option__label">
                 <input type="checkbox" name="save_record" value="1">
-                Ma'lumotnomani bazaga saqlash (keyinroq ro'yxatdan qayta PDF yaratish mumkin)
+                Ma'lumotnomani bazaga saqlash (keyinroq ro'yxatdan qayta yuklab olish mumkin)
             </label>
             <p class="field__hint">
-                Saqlanmasa — ma'lumotlar faqat PDF yaratish uchun ishlatiladi va serverda qolmaydi.
+                Saqlanmasa — ma'lumotlar faqat hujjat yaratish uchun ishlatiladi va serverda qolmaydi.
             </p>
         </div>
 
         <div class="form-actions">
             <button type="button" class="btn btn--secondary" id="js-preview-btn">Oldindan ko'rish</button>
-            <button type="submit" class="btn btn--primary" id="js-submit-btn">PDF yuklab olish</button>
+            <button type="submit" class="btn btn--primary" id="js-submit-btn" data-label-pdf="PDF yuklab olish" data-label-docx="Word (.docx) yuklab olish">PDF yuklab olish</button>
             <button type="button" class="btn btn--danger-outline" id="js-reset-btn">Formani tozalash</button>
         </div>
 

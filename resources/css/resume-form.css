@@ -262,7 +262,34 @@ body {
 .save-option {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 10px;
+}
+
+.save-option__format {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.save-option__caption {
+    font-weight: 600;
+    color: #1f2430;
+}
+
+.save-option__radio {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.save-option__radio input[type="radio"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #2563eb;
 }
 
 .save-option__label {

@@ -35,6 +35,7 @@
                                 <div class="index-actions">
                                     <a class="btn btn--secondary" href="{{ resume_route('resume.show', $resume->getKey()) }}">Ko'rish</a>
                                     <a class="btn btn--primary" href="{{ resume_route('resume.regenerate', $resume->getKey()) }}">PDF</a>
+                                    <a class="btn btn--secondary" href="{{ resume_route('resume.regenerate', $resume->getKey(), ['format' => 'docx']) }}">Word</a>
                                     <form action="{{ resume_route('resume.destroy', $resume->getKey()) }}" method="POST" class="inline-form"
                                           onsubmit="return confirm('O'chirilsinmi?');">
                                         @csrf

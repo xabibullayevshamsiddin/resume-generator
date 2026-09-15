@@ -46,8 +46,9 @@
             </tr>
         </table>
 
-        <div class="rows-actions" style="margin-top: 18px;">
+        <div class="rows-actions">
             <a class="btn btn--primary" href="{{ resume_route('resume.regenerate', $resume->getKey()) }}">PDF yuklab olish</a>
+            <a class="btn btn--secondary" href="{{ resume_route('resume.regenerate', $resume->getKey(), ['format' => 'docx']) }}">Word (.docx)</a>
             <a class="btn btn--secondary" href="{{ resume_route('resume.index') }}">Ro'yxat</a>
         </div>
     </div>

@@ -92,8 +92,12 @@ if (! function_exists('resume_pdf_action')) {
 if (! function_exists('resume_route')) {
     /**
      * Loyiha ichki havolalari uchun umumiy URL (resume_action_url qisqartmasi).
+     *
+     * @param  string  $route  Route nomi
+     * @param  mixed  $id  Route parametri (masalan resume id)
+     * @param  array<string, mixed>  $query  Qo'shimcha query parametrlar (masalan ['format' => 'docx'])
      */
-    function resume_route(string $route, $id = null): string
+    function resume_route(string $route, $id = null, array $query = []): string
     {
         $paths = [
             'resume.form' => '/yarat',
@@ -112,6 +116,6 @@ if (! function_exists('resume_route')) {
             $path = '/';
         }
 
-        return resume_action_url($path);
+        return resume_action_url($path, $query);
     }
 }

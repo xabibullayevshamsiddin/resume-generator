@@ -54,6 +54,8 @@ npm run watch              # o'zgarishlarni kuzatish
 - Home (landing): `GET /` (route nomi `home`) — hero + video qo'llanma modali
 - Forma: `GET /yarat` (route nomi `resume.form`)
 - PDF: `POST /resume/pdf` (route nomi `resume.pdf`, `throttle:10,1`)
+- Formatlar: forma `format=pdf|docx` — Word versiyasi `phpoffice/phpword` bilan yaratiladi (Times New Roman, A4, rasm bilan)
+- Saqlangan yozuvdan: `GET /resumes/{id}/pdf` (PDF) · `GET /resumes/{id}/pdf?format=docx` (Word)
 - Ro'yxat: `GET /resumes` · Ko'rish: `GET /resumes/{id}` · Qayta PDF: `GET /resumes/{id}/pdf` · O'chirish: `DELETE /resumes/{id}`
 
 > **Video qo'llanma:** `public/videos/qollanma.mp4` faylini joylashtirsangiz, home sahifadagi "Video qo'llanmani ko'rish" tugmasi avtomatik faollashadi (fayl bo'lmasa tugma disabled holatda turadi, xato bermaydi).

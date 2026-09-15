@@ -292,6 +292,20 @@ class ResumePdfService
      */
     public function makeSafeFilename(string $fullName): string
     {
+        $base = $this->makeSafeBase($fullName);
+
+        // Fallback slug allaqachon 'malumotnoma' — qo'shimcha qo'shilmaydi
+        return $base === 'malumotnoma'
+            ? 'malumotnoma.pdf'
+            : $base.'-malumotnoma.pdf';
+    }
+
+    /**
+     * F.I.Sh.dan xavfsiz slug (fayl nomisiz) — PDF va DOCX formatlari
+     * o'z kengaytmasi bilan qo'shadi. Slug bo'sh chiqsa 'malumotnoma' qaytaradi.
+     */
+    public function makeSafeBase(string $fullName): string
+    {
         $slug = Str::of($fullName)
             ->trim()
             ->lower()
@@ -303,9 +317,7 @@ class ResumePdfService
 
         $slug = trim((string) $slug, '-');
 
-        return filled($slug)
-            ? $slug.'-malumotnoma.pdf'
-            : 'malumotnoma.pdf';
+        return filled($slug) ? $slug : 'malumotnoma';
     }
 
     /**

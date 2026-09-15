@@ -541,9 +541,14 @@
                 return;
             }
 
+            var format = form.querySelector('input[name="format"]:checked');
+            var isDocx = format !== null && format.value === 'docx';
+
             isSubmitting = true;
             submitButton.disabled = true;
-            submitButton.textContent = 'PDF tayyorlanmoqda...';
+            submitButton.textContent = isDocx
+                ? 'Word hujjat tayyorlanmoqda...'
+                : 'PDF tayyorlanmoqda...';
         });
     }
 

@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\GenerateResumeRequest;
 use App\Models\Resume;
+use App\Services\ResumeDocxService;
 use App\Services\ResumePdfService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class ResumeController extends Controller
 {
@@ -19,14 +19,13 @@ class ResumeController extends Controller
     }
 
     /**
-     * Validatsiya, PDF yaratish va download.
-     * Barcha mantıq ResumePdfService'da — controller faqat oqimni boshqaradi.
+     * Validatsiya, hujjat yaratish va download (PDF yoki DOCX).
+     * Barcha mantıq Service'da — controller faqat oqimni boshqaradi.
      */
-    public function downloadPdf(GenerateResumeRequest $request, ResumePdfService $service)
+    public function downloadPdf(GenerateResumeRequest $request, ResumePdfService $service, ResumeDocxService $docxService)
     {
         $validated = $request->validated();
-
-        $filename = $service->makeSafeFilename($validated['full_name']);
+        $format = $request->input('format') === 'docx' ? 'docx' : 'pdf';
 
         $photo = $request->file('photo');
 
@@ -34,13 +33,26 @@ class ResumeController extends Controller
         if ($request->boolean('save_record')) {
             $resume = $service->storeResume($validated, $photo);
 
-            // PDF'ni saqlangan rasm bilan yaratamiz
-            $pdfData = $service->buildViewData($resume->toFormData(), $resume->photo_path);
-
-            return $service->renderPdf($pdfData, $filename);
+            // Hujjatni saqlangan rasm bilan yaratamiz
+            return $this->downloadFromRecord($resume, $service, $docxService, $format);
         }
 
-        return $service->generateDownload($request, $filename);
+        $base = $service->makeSafeBase($validated['full_name']);
+
+        if ($format === 'docx') {
+            // Vaqtinchalik rasm: yaratishdan keyin (xatolikda ham) o'chiriladi
+            $photoPath = $service->storeTemporaryPhoto($photo);
+
+            try {
+                $data = $service->buildViewData($validated, $photoPath);
+
+                return $docxService->generateFromViewData($data, $photoPath, $base.'-malumotnoma.docx');
+            } finally {
+                $service->deleteTemporaryPhoto($photoPath);
+            }
+        }
+
+        return $service->generateDownload($request, $base.'-malumotnoma.pdf');
     }
 
     /**
@@ -64,13 +76,16 @@ class ResumeController extends Controller
     }
 
     /**
-     * Saqlangan ma'lumotnoma asosida PDF qayta yaratish.
+     * Saqlangan ma'lumotnoma asosida hujjat qayta yaratish (PDF yoki DOCX).
      */
-    public function regeneratePdf(Resume $resume, ResumePdfService $service)
+    public function regeneratePdf(Resume $resume, Request $request, ResumePdfService $service, ResumeDocxService $docxService)
     {
-        $filename = $service->makeSafeFilename($resume->full_name);
-
-        return $service->generateFromModel($resume, $filename);
+        return $this->downloadFromRecord(
+            $resume,
+            $service,
+            $docxService,
+            $request->query('format') === 'docx' ? 'docx' : 'pdf'
+        );
     }
 
     /**
@@ -85,5 +100,19 @@ class ResumeController extends Controller
         return redirect()
             ->route('resume.index')
             ->with('success', "Ma'lumotnoma o'chirildi.");
+    }
+
+    /**
+     * Bazadagi yozuvdan istalgan formatda hujjat qaytaradi.
+     */
+    protected function downloadFromRecord(Resume $resume, ResumePdfService $service, ResumeDocxService $docxService, string $format)
+    {
+        $base = $service->makeSafeBase($resume->full_name);
+
+        if ($format === 'docx') {
+            return $docxService->generateFromModel($resume, $base.'-malumotnoma.docx');
+        }
+
+        return $service->generateFromModel($resume, $base.'-malumotnoma.pdf');
     }
 }

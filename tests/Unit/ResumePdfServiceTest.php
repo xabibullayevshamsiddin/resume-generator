@@ -37,6 +37,14 @@ class ResumePdfServiceTest extends TestCase
         $this->assertSame('malumotnoma.pdf', $service->makeSafeFilename('...///\\\\'));
     }
 
+    public function test_make_safe_base_returns_slug_without_extension(): void
+    {
+        $service = new ResumePdfService();
+
+        $this->assertSame('yarashev-sardor', $service->makeSafeBase('Yarashev Sardor'));
+        $this->assertSame('malumotnoma', $service->makeSafeBase('...///\\\\'));
+    }
+
     public function test_filename_is_limited_in_length(): void
     {
         $service = new ResumePdfService();
