@@ -533,20 +533,24 @@
      * ===================================================================== */
     var form = document.getElementById('js-resume-form');
     var submitButton = document.getElementById('js-submit-btn');
+    var submitDocxButton = document.getElementById('js-submit-docx');
     var isSubmitting = false;
 
-    if (form && submitButton) {
-        form.addEventListener('submit', function () {
+    if (form && (submitButton || submitDocxButton)) {
+        form.addEventListener('submit', function (event) {
             if (isSubmitting) {
+                event.preventDefault();
                 return;
             }
 
-            var format = form.querySelector('input[name="format"]:checked');
-            var isDocx = format !== null && format.value === 'docx';
+            var clicked = event.submitter || submitButton;
+            var isDocx = clicked === submitDocxButton;
+            var target = isDocx ? submitDocxButton : submitButton;
 
             isSubmitting = true;
             submitButton.disabled = true;
-            submitButton.textContent = isDocx
+            submitDocxButton.disabled = true;
+            target.textContent = isDocx
                 ? 'Word hujjat tayyorlanmoqda...'
                 : 'PDF tayyorlanmoqda...';
         });
