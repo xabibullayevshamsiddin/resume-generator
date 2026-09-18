@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   Production: HTTPS majburiy (cleartext o'chiq).
-  10.0.2.2 — Android emulyatorning host manzili (lokal test).
-  10.64.199.31 — kompyuterning lokal Wi-Fi IP'si (haqiqiy telefon bilan test:
-  ilova --dart-define=API_BASE_URL=http://10.64.199.31 bilan build qilinsa,
-  backend'ga to'g'ridan-to'g'ri ulanadi).
+  10.0.2.2 - Android emulyatorning host manzili (lokal test).
+  10.64.199.31 - kompyuterning lokal Wi-Fi IP manzili (haqiqiy telefon bilan
+  test: ilova sozlamalarida shu manzil ko'rsatilsa, backend'ga
+  to'g'ridan-to'g'ri ulanadi).
 -->
 <network-security-config>
     <base-config cleartextTrafficPermitted="false" />
