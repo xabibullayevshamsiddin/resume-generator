@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../core/ads.dart';
 import '../core/api_client.dart';
 import '../core/settings.dart';
 import '../core/theme.dart';
@@ -41,8 +40,6 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // Pastda AdMob banner (yuklanmaganda joy egallamaydi)
-      bottomNavigationBar: const AdBanner(),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         foregroundColor: AppColors.parchment,

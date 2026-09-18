@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
-import '../core/ads.dart';
 import '../core/api_client.dart';
 import '../core/constants.dart';
 import '../core/theme.dart';
@@ -112,9 +111,6 @@ class _FormScreenState extends State<FormScreen> {
       if (!mounted) {
         return;
       }
-
-      // Reklama: har 3-PDF'dan keyin interstitial (PDF olingach ko'rsatiladi)
-      AdService.onPdfGenerated(context);
 
       // PDF avtomatik ochiladi (PDF o'quvchi ilovasi bilan)
       final openError = await ResumeApiService.openPdf(result.file.path);

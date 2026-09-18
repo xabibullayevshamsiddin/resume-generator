@@ -26,8 +26,6 @@ dependencies:
   google_fonts: ^6.2.1
   # Sozlamalar (server manzili) — shifrlangan xotirada
   flutter_secure_storage: ^9.2.2
-  # Google AdMob reklama (banner + interstitial)
-  google_mobile_ads: ^9.1.0
 
 dev_dependencies:
   flutter_test:

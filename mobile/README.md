@@ -33,24 +33,6 @@ flutter build apk --release --dart-define=API_BASE_URL=https://sizning-domeningi
 
 Natija: `build/app/outputs/flutter-apk/app-release.apk`
 
-## Reklama (AdMob) — pul ishlash
-
-Ilovada AdMob banner (Home pastida) va interstitial (har 3-PDF'dan keyin) bor.
-Hozir **Google TEST ID'lari** ishlatilgan — reklama ko'rinadi, lekin **daromad bermaydi**.
-
-Real daromad uchun:
-1. [apps.admob.com](https://apps.admob.com) da ilova qo'shing (package: `com.example.resume_generator`)
-2. `mobile/android/app/src/main/AndroidManifest.xml`da test APP ID'ni (`ca-app-pub-3940256099942544~3347511713`) o'z ID'ingizga almastiring
-3. `mobile/lib/core/ads.dart`da banner va interstitial unit ID'larini o'zingiznikiga o'zgartiring
-4. Push qiling — CI yangi APK build qiladi
-
-⚠️ **Muhim:** AdMob siyosati bo'yicha o'zingizning ilovalaringizga o'zi bosish
-(yoki boshqalarga buyurish) hisobni doimiy bloklaydi. Test qurilmalaringizni
-AdMob konsolida ro'yxatdan o'tkazing. Shuningdek, foydalanuvchi shaxsiy
-ma'lumotlari (pasport, telefon) serverga yuborilishi bilan bog'liq ilovada
-GDPR/izoh talablari paydo bo'lishi mumkin — AdMob UMP consent formasi
-talab qilinsa `google_mobile_ads` hujjatidagi Consent API qo'shing.
-
 ## Muhim eslatmalar
 
 - **Server manzili** ilova ichidagi sozlamalarda (shifrlangan xotira —
