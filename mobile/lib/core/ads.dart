@@ -162,7 +162,6 @@ class _AdBannerState extends State<AdBanner> {
   void initState() {
     super.initState();
     AdService.loadBanner();
-    AdService.banner?.setImmersiveMode(false);
   }
 
   @override
