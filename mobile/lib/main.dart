@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 
+import 'core/ads.dart';
 import 'core/settings.dart';
 import 'core/theme.dart';
 import 'screens/home_screen.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // AdMob SDK (banner + interstitial). Yuklanmasa ilova ishlashda davom etadi.
+  AdService.ensureInitialized();
+
   runApp(const ResumeGeneratorApp());
 }
 
