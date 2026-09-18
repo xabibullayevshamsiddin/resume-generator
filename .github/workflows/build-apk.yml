@@ -1,0 +1,82 @@
+name: Build Android APK
+
+# mobile/ yoki workflow o'zgarsa avtomatik build. Qo'lda ham ishga tushirish mumkin
+# (Actions → Build Android APK → Run workflow — API manzilini kiritish mumkin).
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'mobile/**'
+      - '.github/workflows/build-apk.yml'
+  workflow_dispatch:
+    inputs:
+      api_base_url:
+        description: "API manzili (APK ichiga standart sifatida yoziladi)"
+        required: false
+        default: 'https://localhost'
+
+permissions:
+  contents: write
+
+jobs:
+  build-apk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Java 17 (Android Gradle uchun)
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Flutter (stable)
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      # Repoda faqat lib/, pubspec.yaml va tanlangan android fayllari bor —
+      # qolgan Android skeletini (gradle, res, ...) flutter create to'ldiradi.
+      # Mavjud fayllar (manifest, network config, MainActivity) o'zgarmaydi.
+      - name: Android skeletini tiklash (flutter create)
+        working-directory: mobile
+        run: |
+          cp pubspec.yaml /tmp/pubspec.backup.yaml
+          flutter create . --org com.example --project-name resume_generator --platforms android
+          cp /tmp/pubspec.backup.yaml pubspec.yaml
+
+      # Xavfsizlik sherigi: manifest qayta yozilib INTERNET ruxsati yo'qolsa,
+      # build atayin to'xtaydi (jimgina noto'g'ri APK chiqmasligi uchun).
+      - name: INTERNET ruxsati borligini tekshirish
+        working-directory: mobile
+        run: grep -q "android.permission.INTERNET" android/app/src/main/AndroidManifest.xml
+
+      - name: pub get + APK build (release)
+        working-directory: mobile
+        run: |
+          flutter pub get
+          flutter build apk --release \
+            --dart-define=API_BASE_URL=${{ github.event_name == 'workflow_dispatch' && github.event.inputs.api_base_url || 'https://localhost' }}
+
+      - name: APK hajmi
+        run: ls -lh mobile/build/app/outputs/flutter-apk/app-release.apk
+
+      - name: Release sahifasiga yuklash
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v1.0.${{ github.run_number }}
+          name: APK build #${{ github.run_number }}
+          files: mobile/build/app/outputs/flutter-apk/app-release.apk
+          body: |
+            **Mobil ilova APK** (build #${{ github.run_number }}, commit ${{ github.sha }})
+
+            ### O'rnatish
+            1. `app-release.apk` faylini yuklab oling
+            2. Telefonda oching — "Noma'lum manbalardan o'rnatish"ga ruxsat bering
+            3. Ilovani ochib, o'ng yuqoridagi ⚙ orqali **server manzilini** kiriting
+               (masalan `http://10.64.199.31` — kompyuter bilan bir Wi-Fi'da,
+               yoki `https://domeningiz.uz` — HTTPS productionda)
+
+            Backend: shu repodagi Laravel `POST /api/v1/resume/pdf`
+          make_latest: true

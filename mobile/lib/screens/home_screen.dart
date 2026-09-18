@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../core/api_client.dart';
+import '../core/settings.dart';
 import '../core/theme.dart';
 import '../widgets/seal_animation.dart';
 import 'form_screen.dart';
@@ -12,9 +14,44 @@ import 'video_screen.dart';
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
+  Future<void> _openSettings(BuildContext context) async {
+    final current = AppSettings.cachedBaseUrl;
+    final saved = await showModalBottomSheet<String>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: AppColors.ink,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (_) => Padding(
+        padding:
+            EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+        child: SettingsScreen(currentBaseUrl: current),
+      ),
+    );
+
+    if (saved != null && context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Server manzili saqlandi ✅')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        foregroundColor: AppColors.parchment,
+        elevation: 0,
+        actions: [
+          IconButton(
+            tooltip: 'Server sozlamalari',
+            onPressed: () => _openSettings(context),
+            icon: const Icon(Icons.settings_outlined),
+          ),
+        ],
+      ),
       body: Stack(
         children: [
           // Orqa fondagi muhr (markazdan yuqoriroqda, vebdagidek)
@@ -34,7 +71,8 @@ class HomeScreen extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const SizedBox(height: 48),
+                    // AppBar balandligini qoplaydigan bo'shliq (muhr markazda qolsin)
+                    const SizedBox(height: 8),
                     // Sarlavha — "generatori" so'zi Brass + italic (vebdagidek)
                     Text.rich(
                       TextSpan(

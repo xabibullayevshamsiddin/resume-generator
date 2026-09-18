@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
-import '../core/api_config.dart';
 import '../core/api_client.dart';
+import '../core/settings.dart';
 import '../core/theme.dart';
 
 /// Video qo'llanma — serverdan to'g'ridan-to'g'ri stream qilinadi
@@ -23,7 +23,9 @@ class _VideoScreenState extends State<VideoScreen> {
   void initState() {
     super.initState();
 
-    _controller = VideoPlayerController.networkUrl(Uri.parse(videoUrl()))
+    _controller = VideoPlayerController.networkUrl(
+      Uri.parse(videoUrlFor(AppSettings.cachedBaseUrl)),
+    )
       ..initialize().then((_) {
         if (!mounted) {
           return;

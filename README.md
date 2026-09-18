@@ -72,9 +72,10 @@ POST /api/v1/resume/pdf    # multipart, web formasi bilan BIR XIL maydon formati
 - Validatsiya xatolari — `422` JSON (`errors` obyekti, maydon nomlari bo'yicha)
 - **Xavfsizlik:** saqlangan ma'lumotnomalar ro'yxatini qaytaruvchi API endpoint ATAYIN YO'Q — pasport/telefon/manzillar maxfiy. Kelajakda kerak bo'lsa — sanctum token auth bilan alohida bosqichda.
 - Flutter manba kodi `mobile/` papkasida — build va batafsil ma'lumot uchun **[mobile/README.md](mobile/README.md)**
+- **APK yuklab olish (Flutter kerak emas):** har push'da GitHub Actions APK build qilib [Releases](https://github.com/xabibullayevshamsiddin/resume-generator/releases/latest) sahifasiga qo'yadi — `app-release.apk` ni yuklab olib telefonga o'rnating. Ilova birinchi ochilishda server manzilini so'raydi (⚙ orqali keyin ham o'zgartiriladi).
 
 ```bash
-# APK yig'ish (Flutter SDK bo'lgan mashinada):
+# APK'ni qo'lda yig'ish (Flutter SDK bo'lgan mashinada):
 cd mobile
 flutter pub get
 flutter build apk --release --dart-define=API_BASE_URL=https://sizning-domeningiz.uz

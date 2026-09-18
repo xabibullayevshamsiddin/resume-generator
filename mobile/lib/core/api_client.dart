@@ -1,14 +1,18 @@
 import 'package:dio/dio.dart';
 
-import 'api_config.dart';
+import 'settings.dart';
 
 /// Dio sozlamalari: bazaviy URL, timeout, xatolarni yagona ko'rinishga keltirish.
+///
+/// Bazaviy URL manbai: ilova ichidagi ⚙ Sozlamalarda saqlangan manzil
+/// ([AppSettings.cachedBaseUrl] — main.dart va SettingsScreen o'zgartirganda
+/// yangilanadi). Sozlanmagan bo'lsa build-vaqtidagi standart.
 class ApiClient {
   ApiClient._();
 
   static Dio create() {
     final dio = Dio(BaseOptions(
-      baseUrl: kApiBaseUrl,
+      baseUrl: AppSettings.cachedBaseUrl,
       connectTimeout: const Duration(seconds: 15),
       receiveTimeout: const Duration(minutes: 2),
       sendTimeout: const Duration(minutes: 2),

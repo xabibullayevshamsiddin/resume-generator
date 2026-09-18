@@ -1,19 +1,16 @@
-import 'dart:io' show Platform;
-
-/// API manzili build vaqtida beriladi:
-///   flutter build apk --release --dart-define=API_BASE_URL=https://domen.uz
-///
-/// Berilmasa — lokal dev uchun standart (Android emulyatorda 10.0.2.2 = host).
-const String kApiBaseUrl = String.fromEnvironment(
+/// Build-vaqtidagi standart API manzili (`--dart-define=API_BASE_URL=...`).
+/// CI'da `https://localhost` beriladi — bu haqiqiy server emas, shuning
+/// uchun ilova birinchi ochilishda foydalanuvchidan haqiqiy manzilni so'raydi
+/// (⚙ Sozlamalar, flutter_secure_storage'da saqlanadi).
+const String kDefaultApiBaseUrl = String.fromEnvironment(
   'API_BASE_URL',
-  defaultValue: 'http://10.0.2.2:8000',
+  defaultValue: 'https://localhost',
 );
 
 /// Serverdagi video qo'llanma manzili (ilova ichiga o'rnatilmaydi —
 /// bitta joyda yangilansa hammasiga yetadi).
-String videoUrl() {
-  final base = Uri.parse(kApiBaseUrl);
-  final isAndroidEmulator = Platform.isAndroid && base.host == '10.0.2.2';
+String videoUrlFor(String baseUrl) {
+  final base = Uri.parse(baseUrl);
 
   return base.replace(path: '/videos/qollanma.mp4').toString();
 }

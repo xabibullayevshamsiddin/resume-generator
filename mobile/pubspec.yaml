@@ -24,6 +24,8 @@ dependencies:
   video_player: ^2.9.1
   # "Lora" serif shrift (veb bilan bir xil)
   google_fonts: ^6.2.1
+  # Sozlamalar (server manzili) — shifrlangan xotirada
+  flutter_secure_storage: ^9.2.2
 
 dev_dependencies:
   flutter_test:
