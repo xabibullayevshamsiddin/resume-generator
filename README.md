@@ -1,4 +1,6 @@
-# Ma'lumotnoma generatori (Resume / Rezyume Generator)
+# Ma'lumotnoma generatori
+
+Rasmiy ma'lumotnoma (rezyume) PDF/DOCX generatori — Laravel web + REST API + Flutter mobil ilova. (Resume / Rezyume Generator)
 
 Foydalanuvchi formada shaxsiy ma'lumotlarini, ta'limi, mehnat faoliyati va yaqin qarindoshlari haqidagi ma'lumotlarni kiritadi, 3x4 profil rasmini yuklaydi va **bitta tugma bosish orqali** rasmiy ko'rinishdagi ikki sahifali A4 PDF ma'lumotnomani yuklab oladi.
 
@@ -58,6 +60,25 @@ npm run watch              # o'zgarishlarni kuzatish
 - Saqlangan yozuvdan: `GET /resumes/{id}/pdf` (PDF) · `GET /resumes/{id}/pdf?format=docx` (Word)
 - Ro'yxat: `GET /resumes` · Ko'rish: `GET /resumes/{id}` · Qayta PDF: `GET /resumes/{id}/pdf` · O'chirish: `DELETE /resumes/{id}`
 
+## Mobil ilova (Flutter) — API
+
+Backend'da mobil ilova uchun yagona ochiq endpoint mavjud:
+
+```
+POST /api/v1/resume/pdf    # multipart, web formasi bilan BIR XIL maydon formati
+                            # (employment[0][period], photo, ...), throttle:10,1
+```
+
+- Validatsiya xatolari — `422` JSON (`errors` obyekti, maydon nomlari bo'yicha)
+- **Xavfsizlik:** saqlangan ma'lumotnomalar ro'yxatini qaytaruvchi API endpoint ATAYIN YO'Q — pasport/telefon/manzillar maxfiy. Kelajakda kerak bo'lsa — sanctum token auth bilan alohida bosqichda.
+- Flutter manba kodi `mobile/` papkasida — build va batafsil ma'lumot uchun **[mobile/README.md](mobile/README.md)**
+
+```bash
+# APK yig'ish (Flutter SDK bo'lgan mashinada):
+cd mobile
+flutter pub get
+flutter build apk --release --dart-define=API_BASE_URL=https://sizning-domeningiz.uz
+```
 > **Video qo'llanma:** `public/videos/qollanma.mp4` faylini joylashtirsangiz, home sahifadagi "Video qo'llanmani ko'rish" tugmasi avtomatik faollashadi (fayl bo'lmasa tugma disabled holatda turadi, xato bermaydi).
 
 > **Subpapka/nginx rewrite muammosi:** rewrite qilmaydigan serverlarda ichki havolalar `index.php?_route=/...` formatida ishlaydi (`public/index.php` shim + `resume_route()` helperi). Rewrite ishlaydigan serverda bu shaffof.

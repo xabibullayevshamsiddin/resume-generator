@@ -52,6 +52,29 @@ class ResumePdfService
     }
 
     /**
+     * API (mobil ilova) uchun: vaqtinchalik rasm bilan PDF obyektini qaytaradi.
+     * Rasm `finally`da o'chiriladi (xatolikda ham) — maxfiylik o'zgarmadi.
+     *
+     * @return \Barryvdh\DomPDF\PDF
+     */
+    public function generatePdfBinary(array $validated, ?UploadedFile $photo)
+    {
+        $photoPath = $photo !== null ? $this->storeTemporaryPhoto($photo) : null;
+
+        try {
+            $data = $this->buildViewData($validated, $photoPath);
+
+            $pdf = Pdf::loadHtml(view('resume.pdf', $data)->render());
+
+            $pdf->getDomPDF()->add_info('Title', $data['fullName']." — Ma'lumotnoma");
+
+            return $pdf;
+        } finally {
+            $this->deleteTemporaryPhoto($photoPath);
+        }
+    }
+
+    /**
      * Bazadagi saqlangan ma'lumotnoma asosida PDF qayta yaratadi.
      */
     public function generateFromModel(Resume $resume, string $filename)

@@ -1,0 +1,14 @@
+# Flutter/Dart
+.dart_tool/
+.packages
+build/
+.flutter-plugins
+.flutter-plugins-dependencies
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# Platforma (flutter create'da qo'shiladi, bu yerda faqat umumiy)
+**/ios/Flutter/.last_build_id

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Production: HTTPS majburiy (cleartext o'chiq).
+  Faqat Android emulyatorning host manzili (10.0.2.2) lokal test uchun
+  HTTP ruxsat etiladi — boshqa barcha domenlar HTTPS talab qiladi.
+-->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="false" />
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="false">10.0.2.2</domain>
+    </domain-config>
+</network-security-config>
