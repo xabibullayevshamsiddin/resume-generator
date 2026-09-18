@@ -18,7 +18,7 @@ class AppSettings {
   static const _apiBaseUrlKey = 'api_base_url';
 
   /// Oxirgi o'qilgan manzil (sinxron o'qish uchun — Dio har so'rovda
-  /// async storage'ga tegmasligi kerak). [_ensureLoaded] to'ldiradi.
+  /// async storage'ga tegmasligi kerak). [apiBaseUrl] to'ldiradi.
   static String _cachedBaseUrl = kDefaultApiBaseUrl;
 
   static String get cachedBaseUrl => _cachedBaseUrl;
@@ -69,7 +69,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final raw = _url.text.trim();
 
     if (raw.isEmpty) {
-      _snack('Server manzili bo\\'sh bo\\'lishi mumkin emas.', isError: true);
+      _snack('Server manzili bosh bolishi mumkin emas.', isError: true);
       return;
     }
 
@@ -79,7 +79,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         (!uri.isScheme('http') && !uri.isScheme('https')) ||
         uri.host.isEmpty) {
       _snack(
-        'Manzil http:// yoki https:// bilan boshlanishi kerak.\\n'
+        'Manzil http:// yoki https:// bilan boshlanishi kerak.\n'
         'Masalan: http://10.64.199.31',
         isError: true,
       );
@@ -114,6 +114,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.ink,
       appBar: AppBar(
         backgroundColor: AppColors.ink,
         foregroundColor: AppColors.parchment,
@@ -132,8 +133,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           const SizedBox(height: 4),
           const Text(
-            'Ma\\'lumotnoma generatori backend manzili. '
-            'Kompyuter bilan bir Wi-Fi\\'da bo\\'lsangiz, kompyuterning '
+            "Ma'lumotnoma generatori backend manzili. "
+            "Kompyuter bilan bir Wi-Fi'da bolsangiz, kompyuterning "
             'lokal IP manzilini kiriting (masalan http://10.64.199.31).',
             style: TextStyle(color: AppColors.slate, fontSize: 13),
           ),

@@ -9,7 +9,7 @@ import '../core/api_client.dart';
 
 /// PDF generatsiya natijasi.
 class PdfResult {
-  const PdfResult({required this.file, this.shared = false});
+  const PdfResult({required this.file});
 
   final File file;
 }
@@ -34,7 +34,8 @@ class ResumeApiService {
     final formData = FormData();
 
     // Oddiy maydonlar
-    fields.forEach(formData.fields.add);
+    fields.forEach((key, value) =>
+        formData.fields.add(MapEntry<String, String>(key, value)));
 
     // Nested array maydonlar: employment[0][period] kabi
     arrayFields.forEach((key, values) {
@@ -99,8 +100,9 @@ class ResumeApiService {
   }
 
   /// PDF'ni tashqi ilovada ochadi (PDF o'quvchi, brauzer...).
-  static Future<void> openPdf(String path) async {
-    await OpenFilex.open(path);
+  /// Natija `OpenResult` — form ekranida muvaffaqiyat tekshiriladi.
+  static Future<OpenResult> openPdf(String path) {
+    return OpenFilex.open(path);
   }
 
   /// PDF'ni ulashish (Telegram, WhatsApp, pochta...).

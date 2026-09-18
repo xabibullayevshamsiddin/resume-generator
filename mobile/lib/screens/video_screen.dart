@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
 import '../core/api_client.dart';
+import '../core/api_config.dart';
 import '../core/settings.dart';
 import '../core/theme.dart';
 
